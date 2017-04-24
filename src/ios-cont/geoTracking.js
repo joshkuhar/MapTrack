@@ -40,7 +40,7 @@ class MapViewProject extends Component {
     )
     this.watchID = navigator.geolocation.watchPosition((position) => {
       const { routeCoordinates, distanceTravelled } = this.state
-      const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
+      const newLatLngs = { latitude: position.coords.latitude, longitude: position.coords.longitude }
       const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
       this.setState({
         routeCoordinates: routeCoordinates.concat(positionLatLngs),
@@ -51,6 +51,7 @@ class MapViewProject extends Component {
   }
   _onPressStop(){
     navigator.geolocation.clearWatch(this.watchID);
+    console.log(this.state.routeCoordinates);
   }
 
   componentWillUnmount() {
@@ -63,13 +64,14 @@ class MapViewProject extends Component {
   }
 
   render() {
+    const ll = this.state.routeCoordinates[0] || ""
     return (
       <View style={styles.container}>
-        <View style={styles.navBar}><Text style={styles.navBarText}>Run Rabbit Run</Text></View>
+        <View style={styles.navBar}><Text style={styles.navBarText}>Runner</Text></View>
         <Button style={styles.button} onPress={() => this._onPressStart()} title='start'/>
         <Button style={styles.button} onPress={() => this._onPressStop()} title='stop'/>
-
-        <Text></Text>
+        <Text>{ll.longitude}</Text>
+        <Text>{this.state.distanceTravelled}</Text>
         <View style={styles.bottomBar}>
           <View style={styles.bottomBarGroup}>
             <Text style={styles.bottomBarHeader}>DISTANCE</Text>
@@ -148,5 +150,5 @@ export default MapViewProject
           }]}
         />
 
-        <Text>{this.state.routeCoordinates[0]}</Text>
+        
 */

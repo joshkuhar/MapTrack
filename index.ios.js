@@ -21,7 +21,7 @@ var {
 } = ReactNative;
 
 
-import MapTrack from './src/ios-cont/geoTracking'
+import MapTrack from './src/ios-cont/staticMap'
 
 
 
