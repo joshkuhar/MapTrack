@@ -12,19 +12,18 @@ import MapView from 'react-native-maps';
 
 const {width, height} = Dimensions.get('window');
 
-
 const path = [
   {
-    latitude: 37.37167049, 
-    longitude: -122.14320232
+    latitude: 37.3377169, 
+    longitude: -122.02835139
   }, 
   {
-    latitude: 37.47167049,
-    longitude: -122.14320232
+    latitude: 37.3376765,
+    longitude: -122.02950864
   },
   {
-    latitude: 37.57167049,
-    longitude: -122.14320232
+    latitude: 37.33767947,
+    longitude: -122.03066241
   }
 ]
 
@@ -34,12 +33,15 @@ export default class MapTrack extends Component {
       <View >
         <MapView
          style={{
+          // flex: 1,
+          // justifyContent: 'center',
+          // alignItems: 'center'
           width: width,
-          height: height
+          height: height*.5
          }}
          initialRegion={{
-         latitude: 37.37167049,
-         longitude: -122.14320232,
+         latitude: 37.3377169,
+         longitude: -122.02835139,
          latitudeDelta: 0.0922,
          longitudeDelta: 0.0421,
         }}

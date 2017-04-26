@@ -1,3 +1,4 @@
+'use-strict'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -12,6 +13,7 @@ import {
   Dimensions,
   Button
 } from 'react-native'
+import MapPath from './staticMap';
 
 import haversine from 'haversine'
 import pick from 'lodash/pick'
@@ -33,6 +35,7 @@ class MapViewProject extends Component {
 
   }
   _onPressStart(){
+    console.log("i'm the console")
     navigator.geolocation.getCurrentPosition(
       (position) => {},
       (error) => alert(error.message),
@@ -68,10 +71,12 @@ class MapViewProject extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.navBar}><Text style={styles.navBarText}>Runner</Text></View>
+        <MapPath />
         <Button style={styles.button} onPress={() => this._onPressStart()} title='start'/>
         <Button style={styles.button} onPress={() => this._onPressStop()} title='stop'/>
         <Text>{ll.longitude}</Text>
         <Text>{this.state.distanceTravelled}</Text>
+        <Text>zzzzzz</Text>
         <View style={styles.bottomBar}>
           <View style={styles.bottomBarGroup}>
             <Text style={styles.bottomBarHeader}>DISTANCE</Text>
