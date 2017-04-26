@@ -28,19 +28,20 @@ class MapViewProject extends Component {
     super(props)
     this.state = {
       routeCoordinates: [],
-      initialLat: 0,
-      initialLng: 0,
       distanceTravelled: 0,
+      cLat: 0,
+      cLng: 0,
       prevLatLng: {}
     }
   }
 
   componentDidMount() {
+    // sets initial coords for map
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
-          initialLat: position.coords.latitude, 
-          initialLng: position.coords.longitude
+          cLat: position.coords.latitude, 
+          cLng: position.coords.longitude
         });
       },
       (error) => alert(JSON.stringify(error)),
@@ -55,17 +56,21 @@ class MapViewProject extends Component {
     )
     this.watchID = navigator.geolocation.watchPosition((position) => {
       const { routeCoordinates, distanceTravelled } = this.state
-      const newLatLngs = { latitude: position.coords.latitude, longitude: position.coords.longitude }
+      const newLL = { latitude: position.coords.latitude, longitude: position.coords.longitude }
       const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
       this.setState({
         routeCoordinates: routeCoordinates.concat(positionLatLngs),
-        distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
-        prevLatLng: newLatLngs
+        distanceTravelled: distanceTravelled + this.calcDistance(newLL),
+        // cLat: newLL.latitude,
+        // cLng: newLL.longitude,
+        prevLatLng: newLL
       })
+      console.log(this.state.routeCoordinates);
     },
     (error) => alert(error.message),
     {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
     );
+
   }
   _onPressStop(){
     navigator.geolocation.clearWatch(this.watchID);
@@ -85,13 +90,10 @@ class MapViewProject extends Component {
         <View style={styles.navBar}><Text style={styles.navBarText}>Runner</Text></View>
 
 
-        <MapPath words='something else' path={this.state.routeCoordinates} lat={this.state.initialLat} lng={this.state.initialLng}/>
+        <MapPath words='something else' path={this.state.routeCoordinates} lat={this.state.cLat} lng={this.state.cLng}/>
 
         <Button style={styles.button} onPress={() => this._onPressStart()} title='start'/>
         <Button style={styles.button} onPress={() => this._onPressStop()} title='stop'/>
-        <Text>{ll.longitude}</Text>
-        <Text>{this.state.distanceTravelled}</Text>
-        <Text>zzzzzz</Text>
         <View style={styles.bottomBar}>
           <View style={styles.bottomBarGroup}>
             <Text style={styles.bottomBarHeader}>DISTANCE</Text>
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
 
 export default MapViewProject
 /*
+this.setState({cLat: position.coords.latitude, cLng: position.coords.longitude})
         
                 <MapView.Polyline coordinates={  this.props.path  } strokeWidth={2}>
         </MapView.Polyline>

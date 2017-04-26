@@ -25,12 +25,14 @@ export default class MapTrack extends Component {
           width: width,
           height: height*.5
          }}
-           region={{
+        initialRegion={{
            latitude: this.props.lat,
            longitude: this.props.lng,
-           latitudeDelta: 0.00922,
-           longitudeDelta: 0.00421,
+           latitudeDelta: 0.00422,
+           longitudeDelta: 0.00221,
         }}
+        showsUserLocation={true}
+        followsUserLocation={true}
       >
         <MapView.Polyline coordinates={  this.props.path  } strokeWidth={2}>
         </MapView.Polyline>
