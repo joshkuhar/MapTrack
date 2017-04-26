@@ -29,24 +29,37 @@ class MapViewProject extends Component {
     this.state = {
       routeCoordinates: [],
       distanceTravelled: 0,
-      cLat: 0,
-      cLng: 0,
+      currentLat: 0,
+      currentLng: 0,
       prevLatLng: {}
     }
   }
-
   componentDidMount() {
     // sets initial coords for map
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
-          cLat: position.coords.latitude, 
-          cLng: position.coords.longitude
+          currentLat: position.coords.latitude, 
+          currentLng: position.coords.longitude
         });
       },
       (error) => alert(JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
+  }
+  _onDrop(){
+    this.intervalId = setInterval(() => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            currentLat: position.coords.latitude, 
+            currentLng: position.coords.longitude
+          });
+        },
+        (error) => console.log(JSON.stringify(error)),
+        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+      );
+    }, 1000)
   }
   _onPressStart(){
     navigator.geolocation.getCurrentPosition(
@@ -61,22 +74,20 @@ class MapViewProject extends Component {
       this.setState({
         routeCoordinates: routeCoordinates.concat(positionLatLngs),
         distanceTravelled: distanceTravelled + this.calcDistance(newLL),
-        // cLat: newLL.latitude,
-        // cLng: newLL.longitude,
         prevLatLng: newLL
       })
-      console.log(this.state.routeCoordinates);
     },
-    (error) => alert(error.message),
+    (error) => console.log(error.message),
     {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
     );
 
   }
   _onPressStop(){
     navigator.geolocation.clearWatch(this.watchID);
+    clearInterval(this.intervalId);
   }
   componentWillUnmount() {
-    // navigator.geolocation.clearWatch(this.watchID);
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   calcDistance(newLatLng) {
@@ -88,10 +99,8 @@ class MapViewProject extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.navBar}><Text style={styles.navBarText}>Runner</Text></View>
-
-
-        <MapPath words='something else' path={this.state.routeCoordinates} lat={this.state.cLat} lng={this.state.cLng}/>
-
+        <MapPath words='something else' path={this.state.routeCoordinates} lat={this.state.currentLat} lng={this.state.currentLng}/>
+        <Button style={styles.button} onPress={() => this._onDrop() } title='drop' />
         <Button style={styles.button} onPress={() => this._onPressStart()} title='start'/>
         <Button style={styles.button} onPress={() => this._onPressStop()} title='stop'/>
         <View style={styles.bottomBar}>
