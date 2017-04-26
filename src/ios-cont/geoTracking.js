@@ -13,6 +13,8 @@ import {
   Dimensions,
   Button
 } from 'react-native'
+
+import MapView from 'react-native-maps'
 import MapPath from './staticMap';
 
 import haversine from 'haversine'
@@ -26,16 +28,26 @@ class MapViewProject extends Component {
     super(props)
     this.state = {
       routeCoordinates: [],
+      initialLat: 0,
+      initialLng: 0,
       distanceTravelled: 0,
       prevLatLng: {}
     }
   }
 
   componentDidMount() {
-
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          initialLat: position.coords.latitude, 
+          initialLng: position.coords.longitude
+        });
+      },
+      (error) => alert(JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
   }
   _onPressStart(){
-    console.log("i'm the console")
     navigator.geolocation.getCurrentPosition(
       (position) => {},
       (error) => alert(error.message),
@@ -50,28 +62,31 @@ class MapViewProject extends Component {
         distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
         prevLatLng: newLatLngs
       })
-    });
+    },
+    (error) => alert(error.message),
+    {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+    );
   }
   _onPressStop(){
     navigator.geolocation.clearWatch(this.watchID);
-    console.log(this.state.routeCoordinates);
   }
-
   componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
+    // navigator.geolocation.clearWatch(this.watchID);
   }
 
   calcDistance(newLatLng) {
     const { prevLatLng } = this.state
     return (haversine(prevLatLng, newLatLng) || 0)
   }
-
   render() {
     const ll = this.state.routeCoordinates[0] || ""
     return (
       <View style={styles.container}>
         <View style={styles.navBar}><Text style={styles.navBarText}>Runner</Text></View>
-        <MapPath />
+
+
+        <MapPath words='something else' path={this.state.routeCoordinates} lat={this.state.initialLat} lng={this.state.initialLng}/>
+
         <Button style={styles.button} onPress={() => this._onPressStart()} title='start'/>
         <Button style={styles.button} onPress={() => this._onPressStop()} title='stop'/>
         <Text>{ll.longitude}</Text>
@@ -142,7 +157,9 @@ const styles = StyleSheet.create({
 
 export default MapViewProject
 /*
-
+        
+                <MapView.Polyline coordinates={  this.props.path  } strokeWidth={2}>
+        </MapView.Polyline>
         <MapView
           style={styles.map}
           mapType='satellite'

@@ -37,7 +37,7 @@ class MapTrack extends React.Component {
   _onPressStart() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        var initialPosition = JSON.stringify(position);
+        var initialPosition = JSON.stringify(position.coords.longitude);
         this.setState({initialPosition});
       },
       (error) => alert(JSON.stringify(error)),

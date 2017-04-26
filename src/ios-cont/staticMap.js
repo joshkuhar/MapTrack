@@ -12,25 +12,11 @@ import MapView from 'react-native-maps';
 
 const {width, height} = Dimensions.get('window');
 
-const path = [
-  {
-    latitude: 37.3377169, 
-    longitude: -122.02835139
-  }, 
-  {
-    latitude: 37.3376765,
-    longitude: -122.02950864
-  },
-  {
-    latitude: 37.33767947,
-    longitude: -122.03066241
-  }
-]
-
 export default class MapTrack extends Component {
   render() {
     return (
       <View >
+        <Text>{this.props.words}</Text>
         <MapView
          style={{
           // flex: 1,
@@ -39,14 +25,14 @@ export default class MapTrack extends Component {
           width: width,
           height: height*.5
          }}
-         initialRegion={{
-         latitude: 37.3377169,
-         longitude: -122.02835139,
-         latitudeDelta: 0.0922,
-         longitudeDelta: 0.0421,
+           region={{
+           latitude: this.props.lat,
+           longitude: this.props.lng,
+           latitudeDelta: 0.00922,
+           longitudeDelta: 0.00421,
         }}
       >
-        <MapView.Polyline coordinates={path} strokeWidth={1}>
+        <MapView.Polyline coordinates={  this.props.path  } strokeWidth={2}>
         </MapView.Polyline>
       </MapView>
       </View>
