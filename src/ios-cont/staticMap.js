@@ -23,7 +23,7 @@ export default class MapTrack extends Component {
           // justifyContent: 'center',
           // alignItems: 'center'
           width: width,
-          height: height*.5
+          height: height*.3
          }}
         initialRegion={{
            latitude: this.props.lat,
